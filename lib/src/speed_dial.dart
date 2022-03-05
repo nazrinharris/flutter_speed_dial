@@ -10,6 +10,8 @@ import 'background_overlay.dart';
 import 'speed_dial_child.dart';
 import 'speed_dial_direction.dart';
 
+import 'package:sprung/sprung.dart';
+
 /// Builds the Speed Dial
 class SpeedDial extends StatefulWidget {
   /// Children buttons, from the lowest to the highest.
@@ -117,8 +119,7 @@ class SpeedDial extends StatefulWidget {
   /// ignore backgroundColor, foregroundColor or any other property
   /// that was specific to FAB before like onPress, you will have to provide
   /// it again to your dialRoot button.
-  final Widget Function(
-      BuildContext context, bool open, VoidCallback toggleChildren)? dialRoot;
+  final Widget Function(BuildContext context, bool open, VoidCallback toggleChildren)? dialRoot;
 
   /// This is the child of the FAB, if specified it will ignore icon, activeIcon.
   final Widget? child;
@@ -182,8 +183,7 @@ class SpeedDial extends StatefulWidget {
   _SpeedDialState createState() => _SpeedDialState();
 }
 
-class _SpeedDialState extends State<SpeedDial>
-    with SingleTickerProviderStateMixin {
+class _SpeedDialState extends State<SpeedDial> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: Duration(milliseconds: widget.animationSpeed),
     vsync: this,
@@ -283,8 +283,7 @@ class _SpeedDialState extends State<SpeedDial>
               onTap: _toggleChildren,
               // (_open && !widget.closeManually) ? _toggleChildren : null,
               animation: _controller,
-              color: widget.overlayColor ??
-                  (_dark ? Colors.grey[900] : Colors.white)!,
+              color: widget.overlayColor ?? (_dark ? Colors.grey[900] : Colors.white)!,
               opacity: widget.overlayOpacity,
             );
           },
@@ -322,19 +321,16 @@ class _SpeedDialState extends State<SpeedDial>
           )
         : AnimatedBuilder(
             animation: _controller,
-            builder: (BuildContext context, Widget? _widget) =>
-                Transform.rotate(
-              angle:
-                  (widget.activeChild != null || widget.activeIcon != null) &&
-                          widget.useRotationAnimation
-                      ? _controller.value * widget.animationAngle
-                      : 0,
+            builder: (BuildContext context, Widget? _widget) => Transform.rotate(
+              angle: (widget.activeChild != null || widget.activeIcon != null) &&
+                      widget.useRotationAnimation
+                  ? _controller.value * widget.animationAngle
+                  : 0,
               child: AnimatedSwitcher(
                   duration: Duration(milliseconds: widget.animationSpeed),
                   child: (widget.child != null && _controller.value < 0.4)
                       ? widget.child
-                      : (widget.activeIcon == null &&
-                                  widget.activeChild == null ||
+                      : (widget.activeIcon == null && widget.activeChild == null ||
                               _controller.value < 0.4)
                           ? Container(
                               child: Center(
@@ -353,8 +349,7 @@ class _SpeedDialState extends State<SpeedDial>
                               ),
                             )
                           : Transform.rotate(
-                              angle:
-                                  widget.useRotationAnimation ? -pi * 1 / 2 : 0,
+                              angle: widget.useRotationAnimation ? pi / 4 : 0,
                               child: widget.activeChild ??
                                   Container(
                                     child: Center(
@@ -381,17 +376,13 @@ class _SpeedDialState extends State<SpeedDial>
                 opacity: animation,
                 child: child,
               ),
-      child: (!_open || widget.activeLabel == null)
-          ? widget.label
-          : widget.activeLabel,
+      child: (!_open || widget.activeLabel == null) ? widget.label : widget.activeLabel,
     );
 
     final backgroundColorTween = ColorTween(
-        begin: widget.backgroundColor,
-        end: widget.activeBackgroundColor ?? widget.backgroundColor);
+        begin: widget.backgroundColor, end: widget.activeBackgroundColor ?? widget.backgroundColor);
     final foregroundColorTween = ColorTween(
-        begin: widget.foregroundColor,
-        end: widget.activeForegroundColor ?? widget.foregroundColor);
+        begin: widget.foregroundColor, end: widget.activeForegroundColor ?? widget.foregroundColor);
 
     var animatedFloatingButton = AnimatedBuilder(
       animation: _controller,
@@ -401,9 +392,8 @@ class _SpeedDialState extends State<SpeedDial>
           child: AnimatedFloatingButton(
             visible: widget.visible,
             tooltip: widget.tooltip,
-            dialRoot: widget.dialRoot != null
-                ? widget.dialRoot!(context, _open, _toggleChildren)
-                : null,
+            dialRoot:
+                widget.dialRoot != null ? widget.dialRoot!(context, _open, _toggleChildren) : null,
             backgroundColor: widget.backgroundColor != null
                 ? backgroundColorTween.lerp(_controller.value)
                 : null,
@@ -412,9 +402,7 @@ class _SpeedDialState extends State<SpeedDial>
                 : null,
             elevation: widget.elevation,
             onLongPress: _toggleChildren,
-            callback: (_open || widget.onPress == null)
-                ? _toggleChildren
-                : widget.onPress,
+            callback: (_open || widget.onPress == null) ? _toggleChildren : widget.onPress,
             size: widget.buttonSize,
             label: widget.label != null ? label : null,
             child: child,
@@ -485,23 +473,14 @@ class _ChildrensOverlayState extends State<_ChildrensOverlay> {
             index: index,
             margin: widget.widget.spaceBetweenChildren != null
                 ? EdgeInsets.fromLTRB(
-                    widget.widget.direction.isRight
-                        ? widget.widget.spaceBetweenChildren!
-                        : 0,
-                    widget.widget.direction.isDown
-                        ? widget.widget.spaceBetweenChildren!
-                        : 0,
-                    widget.widget.direction.isLeft
-                        ? widget.widget.spaceBetweenChildren!
-                        : 0,
-                    widget.widget.direction.isUp
-                        ? widget.widget.spaceBetweenChildren!
-                        : 0,
+                    widget.widget.direction.isRight ? widget.widget.spaceBetweenChildren! : 0,
+                    widget.widget.direction.isDown ? widget.widget.spaceBetweenChildren! : 0,
+                    widget.widget.direction.isLeft ? widget.widget.spaceBetweenChildren! : 0,
+                    widget.widget.direction.isUp ? widget.widget.spaceBetweenChildren! : 0,
                   )
                 : null,
             btnKey: child.key,
-            useColumn: widget.widget.direction.isLeft ||
-                widget.widget.direction.isRight,
+            useColumn: widget.widget.direction.isLeft || widget.widget.direction.isRight,
             visible: child.visible,
             switchLabelPosition: widget.widget.switchLabelPosition,
             backgroundColor: child.backgroundColor,
@@ -520,9 +499,7 @@ class _ChildrensOverlayState extends State<_ChildrensOverlay> {
               if (!widget.widget.closeManually) widget.toggleChildren();
             },
             shape: child.shape,
-            heroTag: widget.widget.heroTag != null
-                ? '${widget.widget.heroTag}-child-$index'
-                : null,
+            heroTag: widget.widget.heroTag != null ? '${widget.widget.heroTag}-child-$index' : null,
             childMargin: widget.widget.childMargin,
             childPadding: widget.widget.childPadding,
           );
@@ -554,28 +531,22 @@ class _ChildrensOverlayState extends State<_ChildrensOverlay> {
                           : Alignment.center,
           offset: widget.widget.direction.isDown
               ? Offset(
-                  (widget.widget.switchLabelPosition ||
-                              widget.dialKey.globalPaintBounds == null
+                  (widget.widget.switchLabelPosition || widget.dialKey.globalPaintBounds == null
                           ? 0
                           : widget.dialKey.globalPaintBounds!.size.width) +
                       max(widget.widget.childrenButtonSize.height - 56, 0) / 2,
                   widget.dialKey.globalPaintBounds!.size.height)
               : widget.widget.direction.isUp
                   ? Offset(
-                      (widget.widget.switchLabelPosition ||
-                                  widget.dialKey.globalPaintBounds == null
+                      (widget.widget.switchLabelPosition || widget.dialKey.globalPaintBounds == null
                               ? 0
                               : widget.dialKey.globalPaintBounds!.size.width) +
-                          max(widget.widget.childrenButtonSize.width - 56, 0) /
-                              2,
+                          max(widget.widget.childrenButtonSize.width - 56, 0) / 2,
                       0)
                   : widget.widget.direction.isLeft
-                      ? Offset(-10.0,
-                          widget.dialKey.globalPaintBounds!.size.height / 2)
-                      : widget.widget.direction.isRight ||
-                              widget.dialKey.globalPaintBounds == null
-                          ? Offset(
-                              widget.dialKey.globalPaintBounds!.size.width + 12,
+                      ? Offset(-10.0, widget.dialKey.globalPaintBounds!.size.height / 2)
+                      : widget.widget.direction.isRight || widget.dialKey.globalPaintBounds == null
+                          ? Offset(widget.dialKey.globalPaintBounds!.size.width + 12,
                               widget.dialKey.globalPaintBounds!.size.height / 2)
                           : const Offset(-10.0, 0.0),
           link: widget.layerLink,
@@ -584,22 +555,15 @@ class _ChildrensOverlayState extends State<_ChildrensOverlay> {
             type: MaterialType.transparency,
             child: Container(
               padding: EdgeInsets.symmetric(
-                horizontal: widget.widget.direction.isUp ||
-                        widget.widget.direction.isDown
+                horizontal: widget.widget.direction.isUp || widget.widget.direction.isDown
                     ? max(widget.widget.buttonSize.width - 56, 0) / 2
                     : 0,
               ),
               margin: widget.widget.spacing != null
                   ? EdgeInsets.fromLTRB(
-                      widget.widget.direction.isRight
-                          ? widget.widget.spacing!
-                          : 0,
-                      widget.widget.direction.isDown
-                          ? widget.widget.spacing!
-                          : 0,
-                      widget.widget.direction.isLeft
-                          ? widget.widget.spacing!
-                          : 0,
+                      widget.widget.direction.isRight ? widget.widget.spacing! : 0,
+                      widget.widget.direction.isDown ? widget.widget.spacing! : 0,
+                      widget.widget.direction.isLeft ? widget.widget.spacing! : 0,
                       widget.widget.direction.isUp ? widget.widget.spacing! : 0,
                     )
                   : null,
@@ -609,8 +573,7 @@ class _ChildrensOverlayState extends State<_ChildrensOverlay> {
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
-                children: widget.widget.direction.isDown ||
-                        widget.widget.direction.isRight
+                children: widget.widget.direction.isDown || widget.widget.direction.isRight
                     ? _getChildrenList().reversed.toList()
                     : _getChildrenList(),
               ),

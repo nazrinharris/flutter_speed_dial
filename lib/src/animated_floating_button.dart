@@ -55,12 +55,8 @@ class _AnimatedFloatingButtonState extends State<AnimatedFloatingButton>
                 child: widget.label != null
                     ? FloatingActionButton.extended(
                         icon: widget.visible ? widget.child : null,
-                        label: widget.visible
-                            ? widget.label!
-                            : const SizedBox.shrink(),
-                        shape: widget.shape is CircleBorder
-                            ? const StadiumBorder()
-                            : widget.shape,
+                        label: widget.visible ? widget.label! : const SizedBox.shrink(),
+                        shape: widget.shape is CircleBorder ? const StadiumBorder() : widget.shape,
                         backgroundColor: widget.backgroundColor,
                         foregroundColor: widget.foregroundColor,
                         onPressed: widget.callback,
@@ -87,9 +83,7 @@ class _AnimatedFloatingButtonState extends State<AnimatedFloatingButton>
             duration: const Duration(milliseconds: 150),
             curve: widget.curve,
             child: Container(
-              child: widget.visible
-                  ? widget.dialRoot
-                  : const SizedBox(height: 0, width: 0),
+              child: widget.visible ? widget.dialRoot : const SizedBox(height: 0, width: 0),
             ),
           );
   }
