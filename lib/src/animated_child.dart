@@ -76,36 +76,48 @@ class AnimatedChild extends AnimatedWidget {
       if (labelWidget != null) {
         return GestureDetector(
           onTap: _performAction,
-          onLongPress: () => _performAction(true),
+          onLongPress: onLongPress == null ? null : () => _performAction(true),
           child: labelWidget,
         );
       }
 
-      return GestureDetector(
-        onTap: _performAction,
-        onLongPress: () => _performAction(true),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
-          margin: childMargin,
+      const borderRadius = BorderRadius.all(Radius.circular(6.0));
+      return Padding(
+        padding: childMargin,
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: labelBackgroundColor ?? (dark ? Colors.grey[800] : Colors.grey[50]),
-            borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+            borderRadius: borderRadius,
             boxShadow: labelShadow ??
                 [
                   BoxShadow(
                     color: dark ? Colors.grey[900]!.withOpacity(0.7) : Colors.grey.withOpacity(0.7),
                     offset: const Offset(0.8, 0.8),
                     blurRadius: 2.4,
-                  )
+                  ),
                 ],
           ),
-          child: Text(label!, style: labelStyle),
+          child: Material(
+            type: MaterialType.transparency,
+            borderRadius: borderRadius,
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: _performAction,
+              onLongPress: onLongPress == null ? null : () => _performAction(true),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
+                  horizontal: 8.0,
+                ),
+                child: Text(label!, style: labelStyle),
+              ),
+            ),
+          ),
         ),
       );
     }
 
-    Animation<Offset> offsetAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.5), end: const Offset(0, 0)).animate(animation);
+    Animation<Offset> offsetAnimation = Tween<Offset>(begin: const Offset(0, 0.5), end: const Offset(0, 0)).animate(animation);
 
     Widget button = FadeTransition(
         opacity: animation,
@@ -153,10 +165,7 @@ class AnimatedChild extends AnimatedWidget {
     ];
 
     Widget _buildColumnOrRow(bool isColumn,
-        {CrossAxisAlignment? crossAxisAlignment,
-        MainAxisAlignment? mainAxisAlignment,
-        required List<Widget> children,
-        MainAxisSize? mainAxisSize}) {
+        {CrossAxisAlignment? crossAxisAlignment, MainAxisAlignment? mainAxisAlignment, required List<Widget> children, MainAxisSize? mainAxisSize}) {
       return isColumn
           ? Column(
               mainAxisSize: mainAxisSize ?? MainAxisSize.max,
